@@ -2,7 +2,7 @@
 #define SM_VECTOR
 #include<malloc.h>
 #include<string.h>
-#define BASE_SIZE 4
+#define BASE_SIZE 2
 typedef struct{
 	int data_size,element_size,size;
 	void *elements;
@@ -20,9 +20,7 @@ void vector_free(vector *v){
 }
 void vector_resume(vector *v,int size){
 	v->element_size=size;
-	void *tmp=malloc(size*v->data_size);
-	memcpy(tmp,v->elements,v->size*v->data_size);
-	free(v->elements);
+	void *tmp=realloc(v->elements,size*v->data_size);
 	v->elements=tmp;
 }
 void vector_clear(vector *v){
@@ -44,7 +42,7 @@ void vector_pop_back(vector *v){
 }
 void *vector_kth_element(vector *v,int k){
 	if(k>=v->size)return 0;
-	return v->elements+--k*v->data_size;
+	return v->elements+k*v->data_size;
 }
 #undef BASE_SIZE
 #endif
