@@ -20,8 +20,7 @@ void vector_free(vector *v){
 }
 void vector_resume(vector *v,int size){
 	v->element_size=size;
-	void *tmp=realloc(v->elements,size*v->data_size);
-	v->elements=tmp;
+	v->elements=realloc(v->elements,size*v->data_size);
 }
 void vector_clear(vector *v){
 	v->size=0;
