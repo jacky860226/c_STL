@@ -146,7 +146,7 @@ void __pop_heap(void *first,void *last,void *result,int data_size,int (*cmp)(con
 	free(value);
 }
 void pop_heap(void *first,void *last,int data_size,int (*cmp)(const void *,const void *)){
-	__pop_heap(first,last,last-data_size,data_size,cmp);
+	__pop_heap(first,last-data_size,last-data_size,data_size,cmp);
 }
 void make_heap(void *first,void *last,int data_size,int (*cmp)(const void *,const void *)){
 	int len=(last-first)/data_size;
@@ -160,7 +160,7 @@ void make_heap(void *first,void *last,int data_size,int (*cmp)(const void *,cons
 	}
 }
 void sort_heap(void *first,void *last,int data_size,int (*cmp)(const void *,const void *)){
-	while(last-first>data_size){
+	while(last-first>=data_size){
 		last-=data_size;
 		__pop_heap(first,last,last,data_size,cmp);
 	}
