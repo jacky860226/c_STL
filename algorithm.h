@@ -58,6 +58,24 @@ void reverse(void *first,void *last,int data_size){
 		last-=data_size;
 	}
 }
+void rotate(void *first,void *middle,void *last,int data_size){
+	if(first==middle||last==middle)return;
+	void *first2=middle;
+    do{
+		iter_swap(first,first2,data_size);
+		first+=data_size;
+		first2+=data_size;
+		if(first==middle)middle=first2;
+	}while(first2!=last);
+	first2= middle;
+	while(first2!= last){
+		iter_swap(first,first2,data_size);
+		first+=data_size;
+		first2+=data_size;
+		if(first==middle)middle=first2;
+		else if(first2==last)first2=middle;
+	}
+}
 void *copy(void *first,void *last,void *result,int data_size){
 	while(first<last){
 		memcpy(result,first,data_size);
@@ -78,6 +96,54 @@ void *merge(void *first1,void *last1,void *first2,void *last2,void *result,int d
 		result+=data_size;
 	}
 	return copy(first2,last2,copy(first1, last1,result,data_size),data_size);
+}
+void __merge_without_buffer(void *first,void *middle,void *last,int data_size,int len1,int len2,int (*cmp)(const void *,const void *)){
+	if(len1==0||len2==0)return;
+	if(len1+len2==2){
+		if(cmp(middle,first)<0)iter_swap(first,middle,data_size);
+		return;
+	}
+	void *first_cut=first,*second_cut=middle;
+	int len11=0,len22=0;
+	if(len1>len2){
+		len11=len1/2;
+		first_cut+=len11*data_size;
+		second_cut=lower_bound(middle,last,data_size,first_cut,cmp);
+		len22=(second_cut-middle)/data_size;
+	}else{
+		len22=len2/2;
+		second_cut+=len22*data_size;
+		first_cut=upper_bound(first,middle,data_size,second_cut,cmp);
+		len11=(first_cut-first)/data_size;
+	}
+	rotate(first_cut,middle,second_cut,data_size);
+	void *new_middle=first_cut;
+	new_middle+=second_cut-middle;
+	__merge_without_buffer(first,first_cut,new_middle,data_size,len11,len22,cmp);
+	__merge_without_buffer(new_middle,second_cut,last,data_size,len1-len11,len2-len22,cmp);
+}
+void __inplace_stable_sort(void *first,void *last,int data_size,int (*cmp)(const void *,const void *)){
+	if(last-first==data_size)return;
+	void *middle=first+((last-first)/data_size/2)*data_size;
+	__inplace_stable_sort(first,middle,data_size,cmp);
+	__inplace_stable_sort(middle,last,data_size,cmp);
+	__merge_without_buffer(first,middle,last,data_size,(middle-first)/data_size,(last-middle)/data_size,cmp);
+}
+void __stable_sort(void *first,void *last,void *buffer,int data_size,int (*cmp)(const void *,const void *)){
+	if(last-first==data_size)return;
+	int len=(last-first)/data_size/2;
+	void *middle=first+len*data_size;
+	__stable_sort(first,middle,buffer,data_size,cmp);
+	__stable_sort(middle,last,buffer+len*data_size,data_size,cmp);
+	merge(first,middle,middle,last,buffer,data_size,cmp);
+	memcpy(first,buffer,last-first);
+}
+void stable_sort(void *first,void *last,int data_size,int (*cmp)(const void *,const void *)){
+	void *buffer=malloc(last-first);
+	if(buffer){
+		__stable_sort(first,last,buffer,data_size,cmp);
+		free(buffer);
+	}else __inplace_stable_sort(first,last,data_size,cmp);
 }
 void *min_element(void *first,void *last,int data_size,int (*cmp)(const void *,const void *)){
 	if(first==last)return first;
@@ -152,12 +218,14 @@ void make_heap(void *first,void *last,int data_size,int (*cmp)(const void *,cons
 	int len=(last-first)/data_size;
 	if(len<2)return;
 	int parent=(len-2)/2;
+	void *value=malloc(data_size);
 	for(;;){
-		void *value=first+parent*data_size;
+		memcpy(value,first+parent*data_size,data_size);
 		__adjust_heap(first,parent,len,value,data_size,cmp);
 		if(parent==0)return;
 		parent--;
 	}
+	free(value);
 }
 void sort_heap(void *first,void *last,int data_size,int (*cmp)(const void *,const void *)){
 	while(last-first>=data_size){
