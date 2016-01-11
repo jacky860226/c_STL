@@ -116,8 +116,11 @@ void __push_heap(void *first,int hole,int top,const void *value,int data_size,in
 	}
 	memcpy(first+hole*data_size,value,data_size);
 }
-void push_heap(void *first,void *last,const void *value,int data_size,int (*cmp)(const void *,const void *)){
+void push_heap(void *first,void *last,int data_size,int (*cmp)(const void *,const void *)){
+	void *value=malloc(data_size);
+	memcpy(value,last-data_size,data_size);
 	__push_heap(first,(last-first)/data_size-1,0,value,data_size,cmp);
+	free(value);
 }
 void __adjust_heap(void *first,int hole,int len,void *value,int data_size,int (*cmp)(const void *,const void *)){
 	const int top=hole;
@@ -135,12 +138,15 @@ void __adjust_heap(void *first,int hole,int len,void *value,int data_size,int (*
 	}
 	__push_heap(first,hole,top,value,data_size,cmp);
 }
-void pop_heap(void *first,void *last,int data_size,int (*cmp)(const void *,const void *)){
+void __pop_heap(void *first,void *last,void *result,int data_size,int (*cmp)(const void *,const void *)){
 	void *value=malloc(data_size);
-	memcpy(value,last,data_size);
-	memcpy(last,first,data_size);
+	memcpy(value,result,data_size);
+	memcpy(result,first,data_size);
 	__adjust_heap(first,0,(last-first)/data_size,value,data_size,cmp);
 	free(value);
+}
+void pop_heap(void *first,void *last,int data_size,int (*cmp)(const void *,const void *)){
+	__pop_heap(first,last,last-data_size,data_size,cmp);
 }
 void make_heap(void *first,void *last,int data_size,int (*cmp)(const void *,const void *)){
 	int len=(last-first)/data_size;
@@ -156,7 +162,7 @@ void make_heap(void *first,void *last,int data_size,int (*cmp)(const void *,cons
 void sort_heap(void *first,void *last,int data_size,int (*cmp)(const void *,const void *)){
 	while(last-first>data_size){
 		last-=data_size;
-		pop_heap(first,last,data_size,cmp);
+		__pop_heap(first,last,last,data_size,cmp);
 	}
 }
 #endif
