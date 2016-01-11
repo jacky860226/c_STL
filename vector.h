@@ -24,7 +24,7 @@ void vector_resume(vector *v,int size){
 }
 void vector_clear(vector *v){
 	v->size=0;
-	vector_resume(v,4);
+	vector_resume(v,BASE_SIZE);
 }
 void vector_push_back(vector *v,const void *data){
 	if(v->element_size==v->size)
