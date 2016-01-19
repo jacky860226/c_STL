@@ -133,7 +133,7 @@ void reverse(void *first,void *last,int data_size){
 void rotate(void *first,void *middle,void *last,int data_size){
 	if(first==middle||last==middle)return;
 	void *first2=middle;
-    do{
+	do{
 		iter_swap(first,first2,data_size);
 		first+=data_size;
 		first2+=data_size;
@@ -315,7 +315,7 @@ bool prev_permutation(void *first,void *last,int data_size,int (*cmp)(const void
 void random_shuffle(void *first,void *last,int data_size,int (*__rand)(const int)){
 	if(first==last)return;
 	void *i;
-    for(i=first+data_size;i!=last;i+=data_size)
+	for(i=first+data_size;i!=last;i+=data_size)
 		iter_swap(i,first+__rand((i-first)/data_size+1)*data_size,data_size);
 }
 void __heap_select(void *first,void *middle,void *last,int data_size,int (*cmp)(const void *,const void *)){
@@ -372,6 +372,6 @@ int __lg(int n){
 }
 void nth_element(void *first,void *nth,void *last,int data_size,int (*cmp)(const void *,const void *)){
 	if(first==last||nth==last)return;
-    __introselect(first,nth,last,data_size,__lg((last-first)/data_size)*2,cmp);
+	__introselect(first,nth,last,data_size,__lg((last-first)/data_size)*2,cmp);
 }
 #endif
