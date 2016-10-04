@@ -17,9 +17,9 @@ typedef deque queue;
 typedef struct{
 	vector v;
 	int (*cmp)(const void *,const void *);
-	int size;
+	size_t size;
 }priority_queue;
-void priority_queue_init(priority_queue *pq,int data_size,int (*_cmp)(const void *,const void *)){
+void priority_queue_init(priority_queue *pq,size_t data_size,int (*_cmp)(const void *,const void *)){
 	vector_init(&pq->v,data_size);
 	pq->size=0;
 	pq->cmp=_cmp;

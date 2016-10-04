@@ -4,10 +4,10 @@
 #include<string.h>
 #define BASE_SIZE 3
 typedef struct{
-	int data_size,element_size,size;
+	size_t data_size,element_size,size;
 	void *elements,*begin,*end;
 }deque;
-void deque_init(deque *dq,int data_size){
+void deque_init(deque *dq,size_t data_size){
 	dq->element_size=BASE_SIZE;
 	dq->data_size=data_size;
 	dq->size=0;
@@ -19,7 +19,7 @@ void deque_free(deque *dq){
 	free(dq->elements);
 	dq->elements=dq->begin=dq->end=0;
 }
-void deque_resume(deque *dq,int size){
+void deque_resume(deque *dq,size_t size){
 	dq->element_size=size;
 	void *tmp=malloc(size*dq->data_size),*tmp_front=dq->begin;
 	dq->begin=tmp+size/3*dq->data_size;
@@ -57,7 +57,7 @@ void deque_pop_front(deque *dq){
 	if(dq->element_size>=dq->size*5&&dq->element_size>BASE_SIZE)
 		deque_resume(dq,dq->size*3);
 }
-void *deque_kth_element(deque *dq,int k){
+void *deque_kth_element(deque *dq,size_t k){
 	if(k>=dq->size)return 0;
 	return dq->begin+k*dq->data_size;
 }

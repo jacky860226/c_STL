@@ -3,14 +3,14 @@
 #include "hashtable.h"
 typedef struct{
 	_Hashtable h;
-	int first_size,second_size;
+	size_t first_size,second_size;
 }unordered_map;
-void unordered_map_init(unordered_map *m,int first_size,int second_size,int (*function)(const void *),int (*cmp)(const void *,const void *)){
+void unordered_map_init(unordered_map *m,size_t first_size,size_t second_size,size_t (*function)(const void *),int (*cmp)(const void *,const void *)){
 	_Hashtable_init(&m->h,first_size+second_size,function,cmp);
 	m->first_size=first_size;
 	m->second_size=second_size;
 }
-#define unordered_map_clear(m) _Hashtable_clear(&m->h)
+#define unordered_map_clear(m) _Hashtable_clear(m.h)
 void unordered_map_free(unordered_map *m){
 	_Hashtable_free(&m->h);
 	m->first_size=0;
@@ -30,7 +30,7 @@ void unordered_map_insert(unordered_map *m,const void *key,const void *value){
 	}
 	free(data);
 }
-#define unordered_map_erase(m,key) _Hashtable_erase(&m->h,key)
+#define unordered_map_erase(m,key) _Hashtable_erase(m.h,key)
 void *unordered_map_find(unordered_map *m,const void *key){
 	__bucket *tmp=_Hashtable_find_base(&m->h,key);
 	if(!tmp)return 0;
