@@ -1,5 +1,6 @@
 #ifndef SM_ALGORITHM
 #define SM_ALGORITHM
+#include<stdlib.h>
 #include<string.h>
 #include<malloc.h>
 #include<stdbool.h>
@@ -10,6 +11,12 @@ void iter_swap(void *a,void *b,size_t data_size){
 		((char*)a)[data_size]=((char*)b)[data_size];
 		((char*)b)[data_size]=tmp;
 	}
+}
+#define swap(a,b) {\
+	void*tmp=malloc(sizeof(a));\
+	memcpy(tmp,&(a),sizeof(a));\
+	a=b;\
+	memcpy(&(b),tmp,sizeof(a));\
 }
 //stl_heap.h:
 void *is_heap_until(void *first,void *last,size_t data_size,int (*cmp)(const void *,const void *)){

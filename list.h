@@ -1,9 +1,9 @@
 /****************************************
 list.h
-é€™è£¡å¯¦ä½œæ²’æœ‰å¾ªç’°çš„link list
-ä¹Ÿå°±æ˜¯é ­çš„prevå’Œå°¾çš„nextæœƒæ˜¯NULL 
-è¨˜ä½å†è¤‡è£½listæ™‚è£¡é¢çš„void *dataæ˜¯æŒ‡æ¨™ 
-å¿…é ˆè¦å†è¢«è¤‡è£½å‡ºä¾†çš„list->dataé€²è¡Œmalloc 
+³o¸Ì¹ê§@¨S¦³´`Àôªºlink list
+¤]´N¬OÀYªºprev©M§Àªºnext·|¬ONULL 
+°O¦í¦A½Æ»slist®É¸Ì­±ªºvoid *data¬O«ü¼Ð 
+¥²¶·­n¦A³Q½Æ»s¥X¨Óªºlist->data¶i¦æmalloc 
 ****************************************/ 
 #ifndef SM_LIST
 #define SM_LIST
